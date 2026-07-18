@@ -13,8 +13,8 @@ from reportlab.pdfgen import canvas
 from reportlab.lib import colors
 from reportlab.graphics.shapes import Drawing, Rect, Circle, Line
 from reportlab.graphics import renderPDF
-from fastapi import FastAPI
-from flet.fastapi import FletApp
+#from fastapi import FastAPI
+#from flet.fastapi import FletApp
 
 
 
@@ -656,6 +656,8 @@ class CuadernilloInteractivo:
 # Esta es la función que Flet usa para cada usuario que se conecta
 #import os
 
+import os
+
 def main(page: ft.Page):
     app_instance = CuadernilloInteractivo(page)
     app_instance.mostrar_login()
@@ -665,7 +667,7 @@ if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))
     
     print("=" * 60)
-    print(f"🚀 Iniciando servidor Flet en modo web (headless)")
+    print("🚀 Iniciando servidor Flet en modo web (headless)")
     print(f"📡 Puerto: {port}")
     print("=" * 60)
     

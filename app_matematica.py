@@ -654,34 +654,27 @@ class CuadernilloInteractivo:
 # ============================================================
 
 # Esta es la función que Flet usa para cada usuario que se conecta
+#import os
+
 def main(page: ft.Page):
     app_instance = CuadernilloInteractivo(page)
     app_instance.mostrar_login()
 
-# Creamos la aplicación FastAPI y montamos Flet en ella
-# Esto es lo que Render (Uvicorn) necesita para funcionar sin errores
-web_app = FastAPI()
-flet_app = FletApp(main)
-web_app.mount("/", flet_app)
-
-# Exponemos 'app' para que el Procfile la encuentre
-app = web_app
-
-# Este bloque solo se ejecuta cuando pruebas en tu PC local, no en Render
 if __name__ == "__main__":
-    PORT = int(os.environ.get("PORT", 8550))
-    print("=" * 60)
-    print("🖥️  Modo LOCAL (tu PC)")
-    print(f"📱 Acceso local: http://localhost:{PORT}")
-    print("=" * 60)
-    try:
-        abrir_firewall_windows(PORT)
-    except Exception:
-        pass
+    # Render asigna un puerto dinámico, lo tomamos de las variables de entorno
+    port = int(os.environ.get("PORT", 8000))
     
-    ft.run(
-        main,
-        view="web_browser",
-        host="0.0.0.0",
-        port=PORT
+    print("=" * 60)
+    print(f"🚀 Iniciando servidor Flet en modo web (headless)")
+    print(f"📡 Puerto: {port}")
+    print("=" * 60)
+    
+    # view=None es CRUCIAL para servidores en la nube.
+    # Le dice a Flet que NO intente abrir una ventana de navegador en el servidor,
+    # sino que solo sirva la aplicación web para que los clientes se conecten.
+    ft.app(
+        target=main,
+        view=None,       # <--- ESTO ES LA CLAVE PARA RENDER
+        host="0.0.0.0",  # Permite conexiones desde internet
+        port=port
     )

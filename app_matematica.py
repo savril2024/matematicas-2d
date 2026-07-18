@@ -38,8 +38,8 @@ class MotorVoz:
             self.inicializado = True
     
     def _inicializar_engine(self):
-        self.engine = pyttsx3.init()
         try:
+            self.engine = pyttsx3.init()
             voices = self.engine.getProperty('voices')
             for voice in voices:
                 if 'spanish' in voice.name.lower() or 'es-' in voice.id.lower():
@@ -47,8 +47,27 @@ class MotorVoz:
                     break
             self.engine.setProperty('rate', 140)
             self.engine.setProperty('volume', 0.9)
+        except RuntimeError:
+            # Estamos en Render (Linux sin eSpeak). 
+            # No hacemos nada, el audio lo manejará el navegador del cliente vía JavaScript.
+            self.engine = None
         except Exception as e:
-            print(f"Error configurando voz: {e}")
+            self.engine = None
+
+    def _loop_voz(self):
+        self._inicializar_engine()
+        while True:
+            try:
+                texto = self.cola.get()
+                if texto is None:
+                    break
+                # Solo intenta hablar con pyttsx3 si el motor se inició (PC Local)
+                if self.engine:
+                    self.engine.say(texto)
+                    self.engine.runAndWait()
+                self.cola.task_done()
+            except Exception:
+                pass # Ignorar cualquier error en segundo plano
     
     def _loop_voz(self):
         self._inicializar_engine()
@@ -578,26 +597,48 @@ class CuadernilloInteractivo:
         except: pass
 
     def _crear_figuras(self, cantidad, tipo):
-        iconos = {'manzana': (ft.Icons.FAVORITE, ft.Colors.RED), 'estrella': (ft.Icons.STAR, ft.Colors.AMBER), 'sol': (ft.Icons.WB_SUNNY, ft.Colors.ORANGE)}
-        icono, color = iconos.get(tipo, (ft.Icons.CIRCLE, ft.Colors.BLUE))
+        iconos = {
+            'manzana': (ft.Icons.FAVORITE, ft.Colors.RED), 
+            'estrella': (ft.Icons.STAR, ft.Colors.AMBER), 
+            'sol': (ft.Icons.WB_SUNNY, ft.Colors.ORANGE)
+        }
+        icono_base, color_base = iconos.get(tipo, (ft.Icons.CIRCLE, ft.Colors.BLUE))
         
         def toggle_tachado(e, idx):
             if idx in self.figuras_tachadas:
+                # Destachar: volver al ícono original
                 self.figuras_tachadas.remove(idx)
-                e.control.content.color = color
-                e.control.content.opacity = 1.0
+                e.control.content = ft.Icon(icono_base, size=40, color=color_base)
             else:
+                # Tachar: poner una X roja encima del ícono gris
                 self.figuras_tachadas.add(idx)
-                e.control.content.color = ft.Colors.GREY
-                e.control.content.opacity = 0.3
-            try: self.page.update()
-            except: pass
+                e.control.content = ft.Stack([
+                    ft.Icon(icono_base, size=40, color=ft.Colors.GREY),
+                    ft.Icon(ft.Icons.CLOSE, size=45, color=ft.Colors.RED)
+                ])
+            
+            # Verificar si completó el ejercicio de resta
+            ejercicio = self.ejercicios[self.ejercicio_actual]
+            if ejercicio['tipo'] == 'resta_visual':
+                if len(self.figuras_tachadas) == ejercicio['restar']:
+                    self.hablar(f"¡Muy bien! Tachaste {ejercicio['restar']} figuras. Ahora cuenta cuántas quedan.")
+            
+            try: 
+                self.page.update()
+            except: 
+                pass
 
         figuras = []
         for i in range(cantidad):
-            figuras.append(ft.Container(content=ft.Icon(icono, size=40, color=color), on_click=lambda e, idx=i: toggle_tachado(e, idx), padding=5, border_radius=5))
+            figuras.append(ft.Container(
+                content=ft.Icon(icono_base, size=40, color=color_base),
+                on_click=lambda e, idx=i: toggle_tachado(e, idx),
+                padding=5, 
+                border_radius=5,
+                ink=True # Efecto visual al hacer clic
+            ))
         return [ft.Row(figuras, alignment=ft.MainAxisAlignment.CENTER, wrap=True)]
-
+    
     def _generar_opciones(self, correcta):
         opciones = [correcta]
         while len(opciones) < 4:

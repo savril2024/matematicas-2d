@@ -1,4 +1,5 @@
 flet>=0.25.0
 reportlab
 pyttsx3
-gunicorn
+fastapi
+uvicorn

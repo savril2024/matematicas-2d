@@ -6,12 +6,17 @@ import pyttsx3
 import sqlite3
 import hashlib
 import subprocess
+import os
 from datetime import datetime
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
 from reportlab.lib import colors
 from reportlab.graphics.shapes import Drawing, Rect, Circle, Line
 from reportlab.graphics import renderPDF
+from fastapi import FastAPI
+from flet.fastapi import FletApp
+
+
 
 # ============================================================
 # 1. MOTOR DE VOZ (Hilo permanente con cola)
@@ -647,29 +652,32 @@ class CuadernilloInteractivo:
 # ============================================================
 # 6. PUNTO DE ENTRADA
 # ============================================================
-import os
 
+# Esta es la función que Flet usa para cada usuario que se conecta
 def main(page: ft.Page):
-    app = CuadernilloInteractivo(page)
-    app.mostrar_login()
+    app_instance = CuadernilloInteractivo(page)
+    app_instance.mostrar_login()
 
+# Creamos la aplicación FastAPI y montamos Flet en ella
+# Esto es lo que Render (Uvicorn) necesita para funcionar sin errores
+web_app = FastAPI()
+flet_app = FletApp(main)
+web_app.mount("/", flet_app)
+
+# Exponemos 'app' para que el Procfile la encuentre
+app = web_app
+
+# Este bloque solo se ejecuta cuando pruebas en tu PC local, no en Render
 if __name__ == "__main__":
     PORT = int(os.environ.get("PORT", 8550))
-    ES_RENDER = os.environ.get("RENDER", "").lower() == "true"
-    
-    if ES_RENDER:
-        print("🚀 Modo Render.com activado")
-        print(f"📡 Puerto: {PORT}")
-        print("🌍 Audio: Web Speech API del navegador")
-    else:
-        print("=" * 60)
-        print("🖥️  Modo LOCAL (tu PC)")
-        print(f"📱 Acceso local: http://localhost:{PORT}")
-        print("=" * 60)
-        try:
-            abrir_firewall_windows(PORT)
-        except Exception:
-            pass
+    print("=" * 60)
+    print("🖥️  Modo LOCAL (tu PC)")
+    print(f"📱 Acceso local: http://localhost:{PORT}")
+    print("=" * 60)
+    try:
+        abrir_firewall_windows(PORT)
+    except Exception:
+        pass
     
     ft.run(
         main,

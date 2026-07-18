@@ -548,8 +548,34 @@ class CuadernilloInteractivo:
             contenido.append(ft.Row([self._crear_boton_opcion(op, ejercicio['respuesta'], ft.Colors.LIGHT_BLUE) for op in opciones], alignment=ft.MainAxisAlignment.CENTER))
         
         elif ejercicio['tipo'] == 'resta_visual':
-            contenido.extend([ft.Text("RESTA:", size=16, weight=ft.FontWeight.BOLD, color=ft.Colors.RED_700), ft.Container(height=10)])
-            contenido.extend(self._crear_figuras(ejercicio['total'], 'sol'))
+            contenido.extend([
+                ft.Text("RESTA:", size=16, weight=ft.FontWeight.BOLD, color=ft.Colors.RED_700),
+                ft.Container(height=10),
+                # INSTRUCCIÓN CLARA PARA EL NIÑO
+                ft.Container(
+                    content=ft.Text(
+                        f"📝 Tacha {ejercicio['restar']} figura{'s' if ejercicio['restar'] > 1 else ''} para resolver",
+                        size=16,
+                        weight=ft.FontWeight.BOLD,
+                        color=ft.Colors.BLUE,
+                        text_align=ft.TextAlign.CENTER
+                    ),
+                    padding=ft.Padding(15, 10, 15, 10),
+                    bgcolor=ft.Colors.BLUE_50,
+                    border_radius=10,
+                    border=self.crear_borde(2, ft.Colors.BLUE_200)
+                ),
+                ft.Container(height=15),
+                # Mostrar la operación matemática
+                ft.Text(
+                    f"{ejercicio['total']} - {ejercicio['restar']} = ?",
+                    size=24,
+                    weight=ft.FontWeight.BOLD,
+                    color=ft.Colors.BLUE_700
+                ),
+                ft.Container(height=15),
+            ])
+            contenido.extend(self._crear_figuras(ejercicio['total'], 'sol', ejercicio))
             contenido.extend([ft.Container(height=10), ft.Text(ejercicio['texto'], size=14, italic=True)])
             opciones = self._generar_opciones(ejercicio['respuesta'])
             contenido.extend([ft.Container(height=10), ft.Text("Selecciona la respuesta:", size=14)])
@@ -621,8 +647,9 @@ class CuadernilloInteractivo:
             ejercicio = self.ejercicios[self.ejercicio_actual]
             if ejercicio['tipo'] == 'resta_visual':
                 if len(self.figuras_tachadas) == ejercicio['restar']:
+                    self.hablar(f"Ejercicio de resta. Tienes {ejercicio['total']} figuras. Tacha {ejercicio['restar']} figuras para resolver.")
                     self.hablar(f"¡Muy bien! Tachaste {ejercicio['restar']} figuras. Ahora cuenta cuántas quedan.")
-            
+                     
             try: 
                 self.page.update()
             except: 

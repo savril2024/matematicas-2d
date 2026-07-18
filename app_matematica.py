@@ -622,7 +622,7 @@ class CuadernilloInteractivo:
         try: self.page.update()
         except: pass
 
-    def _crear_figuras(self, cantidad, tipo):
+    def _crear_figuras(self, cantidad, tipo, ejercicio_actual=None):
         iconos = {
             'manzana': (ft.Icons.FAVORITE, ft.Colors.RED), 
             'estrella': (ft.Icons.STAR, ft.Colors.AMBER), 

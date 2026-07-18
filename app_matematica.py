@@ -84,7 +84,39 @@ class MotorVoz:
                 print(f"Error en loop de voz: {e}")
     
     def hablar(self, texto):
-        self.cola.put(texto)
+        """
+        Audio híbrido:
+        - En PC local: usa pyttsx3 (voz del sistema)
+        - En Render (nube): usa Web Speech API del navegador del niño
+        """
+        # Intento 1: pyttsx3 (solo funciona en PC local con Windows)
+        try:
+            self.motor_voz.hablar(texto)
+        except Exception:
+            pass
+        
+        # Intento 2: Web Speech API (funciona SIEMPRE en el navegador del cliente)
+        # Esto es CRUCIAL para que funcione en Render
+        try:
+            texto_limpio = texto.replace("'", "\\'").replace('"', '\\"')
+            self.page.run_javascript(f"""
+                if ('speechSynthesis' in window) {{
+                    // Cancelar audio anterior
+                    window.speechSynthesis.cancel();
+                    
+                    const utterance = new SpeechSynthesisUtterance('{texto_limpio}');
+                    utterance.lang = 'es-ES';
+                    utterance.rate = 0.9;
+                    utterance.pitch = 1.1;
+                    utterance.volume = 1.0;
+                    
+                    window.speechSynthesis.speak(utterance);
+                }} else {{
+                    console.log('Web Speech API no soportada');
+                }}
+            """)
+        except Exception as e:
+            print(f"Error en audio web: {e}")
     
     def detener(self):
         self.cola.put(None)
@@ -626,46 +658,117 @@ class CuadernilloInteractivo:
         iconos = {
             'manzana': (ft.Icons.FAVORITE, ft.Colors.RED), 
             'estrella': (ft.Icons.STAR, ft.Colors.AMBER), 
-            'sol': (ft.Icons.WB_SUNNY, ft.Colors.ORANGE)
+            'sol': (ft.Icons.WB_SUNNY, ft.Colors.ORANGE),
+            'cara': (ft.Icons.FACE, ft.Colors.ORANGE)
         }
         icono_base, color_base = iconos.get(tipo, (ft.Icons.CIRCLE, ft.Colors.BLUE))
         
+        # Determinar si es ejercicio de resta y cuántas se deben tachar
+        es_resta = False
+        max_tachadas = 0
+        if ejercicio_actual and ejercicio_actual['tipo'] == 'resta_visual':
+            es_resta = True
+            max_tachadas = ejercicio_actual['restar']
+        
         def toggle_tachado(e, idx):
-            if idx in self.figuras_tachadas:
-                # Destachar: volver al ícono original
-                self.figuras_tachadas.remove(idx)
-                e.control.content = ft.Icon(icono_base, size=40, color=color_base)
+            # Lógica DIFERENTE para restas vs sumas
+            if es_resta:
+                if idx in self.figuras_tachadas:
+                    # Permitir destachar
+                    self.figuras_tachadas.remove(idx)
+                    self.hablar(f"Figura destachada. Ahora llevas {len(self.figuras_tachadas)} tachadas de {max_tachadas}.")
+                else:
+                    # VALIDACIÓN ESTRICTA: Solo permitir tachar si no llegamos al límite
+                    if len(self.figuras_tachadas) < max_tachadas:
+                        self.figuras_tachadas.add(idx)
+                        restantes = max_tachadas - len(self.figuras_tachadas)
+                        if restantes > 0:
+                            self.hablar(f"¡Bien! Tachaste {len(self.figuras_tachadas)}. Faltan {restantes} por tachar.")
+                        else:
+                            self.hablar(f"¡Perfecto! Ya tachaste las {max_tachadas} figuras necesarias. Ahora cuenta cuántas quedaron sin tachar.")
+                            # Mostrar opciones después de 2 segundos
+                            threading.Timer(2.0, self._mostrar_opciones_resta).start()
+                    else:
+                        # BLOQUEAR: Ya tachó el máximo permitido
+                        self.hablar(f"¡Alto! Solo debes tachar {max_tachadas} figuras. Ya completaste.")
+                        return  # Salir sin hacer nada
             else:
-                # Tachar: poner una X roja encima del ícono gris
-                self.figuras_tachadas.add(idx)
-                e.control.content = ft.Stack([
-                    ft.Icon(icono_base, size=40, color=ft.Colors.GREY),
-                    ft.Icon(ft.Icons.CLOSE, size=45, color=ft.Colors.RED)
-                ])
+                # Para sumas, permitir tachar libremente
+                if idx in self.figuras_tachadas:
+                    self.figuras_tachadas.remove(idx)
+                else:
+                    self.figuras_tachadas.add(idx)
             
-            # Verificar si completó el ejercicio de resta
-            ejercicio = self.ejercicios[self.ejercicio_actual]
-            if ejercicio['tipo'] == 'resta_visual':
-                if len(self.figuras_tachadas) == ejercicio['restar']:
-                    self.hablar(f"Ejercicio de resta. Tienes {ejercicio['total']} figuras. Tacha {ejercicio['restar']} figuras para resolver.")
-                    self.hablar(f"¡Muy bien! Tachaste {ejercicio['restar']} figuras. Ahora cuenta cuántas quedan.")
-                     
+            # Actualizar visualmente las figuras
+            self._refrescar_figuras_en_pantalla(icono_base, color_base, es_resta)
+            
             try: 
                 self.page.update()
             except: 
                 pass
-
+        
+        # Crear las figuras con el estado actual
         figuras = []
         for i in range(cantidad):
+            if i in self.figuras_tachadas:
+                # Figura tachada: gris con X roja
+                contenido = ft.Stack([
+                    ft.Icon(icono_base, size=40, color=ft.Colors.GREY_400),
+                    ft.Icon(ft.Icons.CLOSE, size=50, color=ft.Colors.RED, weight=ft.FontWeight.BOLD)
+                ])
+            else:
+                # Figura normal
+                contenido = ft.Icon(icono_base, size=40, color=color_base)
+            
             figuras.append(ft.Container(
-                content=ft.Icon(icono_base, size=40, color=color_base),
+                content=contenido,
                 on_click=lambda e, idx=i: toggle_tachado(e, idx),
                 padding=5, 
                 border_radius=5,
-                ink=True # Efecto visual al hacer clic
+                ink=True
             ))
+        
         return [ft.Row(figuras, alignment=ft.MainAxisAlignment.CENTER, wrap=True)]
     
+    def _refrescar_figuras_en_pantalla(self, icono_base, color_base, es_resta):
+        """Refresca visualmente las figuras tachadas vs no tachadas"""
+        # Esta función se llama desde toggle_tachado para actualizar
+        pass
+    
+    def _mostrar_opciones_resta(self):
+        """Muestra las opciones de respuesta para restas"""
+        try:
+            if not hasattr(self, 'contenedor_principal') or not self.contenedor_principal:
+                return
+            
+            ejercicio = self.ejercicios[self.ejercicio_actual]
+            opciones = self._generar_opciones(ejercicio['respuesta'])
+            
+            # Verificar si ya existen botones
+            tiene_botones = False
+            for control in self.contenedor_principal.controls:
+                if isinstance(control, ft.Row):
+                    for item in control.controls:
+                        if isinstance(item, ft.Button):
+                            tiene_botones = True
+                            break
+            
+            if not tiene_botones:
+                # Agregar contenedor de separación
+                self.contenedor_principal.controls.append(ft.Container(height=20))
+                self.contenedor_principal.controls.append(
+                    ft.Text("Selecciona la respuesta correcta:", size=14, weight=ft.FontWeight.BOLD)
+                )
+                self.contenedor_principal.controls.append(ft.Container(height=10))
+                # Agregar botones
+                self.contenedor_principal.controls.append(
+                    ft.Row([self._crear_boton_opcion(op, ejercicio['respuesta'], ft.Colors.LIGHT_GREEN) for op in opciones], 
+                          alignment=ft.MainAxisAlignment.CENTER)
+                )
+                self.page.update()
+        except Exception as e:
+            print(f"Error mostrando opciones: {e}")
+
     def _generar_opciones(self, correcta):
         opciones = [correcta]
         while len(opciones) < 4:

@@ -1,7 +1,11 @@
 services:
   - type: web
-    name: matematicas-2do
+    name: matekids-app
     env: python
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn app_matematica:main --bind 0.0.0.0:$PORT
+    startCommand: gunicorn matekids-app:main --bind 0.0.0.0:$PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.13.6"
     plan: free
+    

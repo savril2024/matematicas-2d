@@ -1,6 +1,33 @@
+data/matekids.db
+data/users.json
+*.mp3
+.env
+venv/
+.venv/
+.DS_Store
+# Entorno virtual
+.venv/
+
+# Caché de Python
 __pycache__/
 *.pyc
-.venv/
-seguridad_matematicas.db
+
+# Archivos temporales
+*.log
+*.tmp
+
+# VS Code
+.vscode/
+
+# PyCharm
+.idea/
+
+# PDF generados
 *.pdf
+
+# Base de datos temporal
+*.db
+
+# Archivos de sistema
 .DS_Store
+Thumbs.db

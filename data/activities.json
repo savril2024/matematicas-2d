@@ -1,0 +1,256 @@
+{
+  "activities": [
+    {
+      "level": 1,
+      "title": {"es": "Restando Peces", "en": "Subtracting Fish"},
+      "operation": "-",
+      "emoji": "🐠",
+      "total": 7,
+      "remove": 3,
+      "answer": 4,
+      "options": [2, 3, 4, 5],
+      "narration": {
+        "es": {"intro": "Observa... hay siete peces.", "action": "Tres peces se fueron.", "question": "¿Cuántos peces quedaron?"},
+        "en": {"intro": "Look... there are seven fish.", "action": "Three fish swam away.", "question": "How many fish are left?"}
+      }
+    },
+    {
+      "level": 1,
+      "title": {"es": "Sumando Manzanas", "en": "Adding Apples"},
+      "operation": "+",
+      "emoji": "🍎",
+      "total": 3,
+      "add": 2,
+      "answer": 5,
+      "options": [4, 5, 6, 7],
+      "narration": {
+        "es": {"intro": "Mira, hay tres manzanas.", "action": "Llegan dos manzanas más.", "question": "¿Cuántas manzanas hay en total?"},
+        "en": {"intro": "Look, there are three apples.", "action": "Two more apples arrive.", "question": "How many apples are there in total?"}
+      }
+    },
+    {
+      "level": 1,
+      "title": {"es": "Sumando Pizzas", "en": "Adding Pizzas"},
+      "operation": "+",
+      "emoji": "🍕",
+      "total": 4,
+      "add": 2,
+      "answer": 6,
+      "options": [4, 5, 6, 7],
+      "narration": {
+        "es": {"intro": "Mira, hay cuatro pizzas.", "action": "Llegan dos pizzas más.", "question": "¿Cuántas pizzas hay en total?"},
+        "en": {"intro": "Look, there are four pizzas.", "action": "Two more pizzas arrive.", "question": "How many pizzas are there in total?"}
+      }
+    },
+    {
+      "level": 1,
+      "title": {"es": "Sumando Carros", "en": "Adding Cars"},
+      "operation": "+",
+      "emoji": "🚕",
+      "total": 3,
+      "add": 3,
+      "answer": 6,
+      "options": [4, 5, 6, 7],
+      "narration": {
+        "es": {"intro": "Mira, hay tres carros.", "action": "Llegan tres carros más.", "question": "¿Cuántos carros hay en total?"},
+        "en": {"intro": "Look, there are three cars.", "action": "Three more cars arrive.", "question": "How many cars are there in total?"}
+      }
+    },
+    {
+      "level": 1,
+      "title": {"es": "Restando Manzanas", "en": "Subtracting Apples"},
+      "operation": "-",
+      "emoji": "🍎",
+      "total": 7,
+      "remove": 3,
+      "answer": 4,
+      "options": [4, 5, 6, 7],
+      "narration": {
+        "es": {"intro": "Mira, hay siete manzanas.", "action": "Se comen tres manzanas.", "question": "¿Cuántas manzanas quedan?"},
+        "en": {"intro": "Look, there are seven apples.", "action": "Three apples are eaten.", "question": "How many apples are left?"}
+      }
+    },
+    {
+      "level": 1,
+      "title": {"es": "Restando Niños en el salón", "en": "Subtracting Kids in the Classroom"},
+      "operation": "-",
+      "emoji": "👩",
+      "total": 9,
+      "remove": 4,
+      "answer": 5,
+      "options": [4, 5, 6, 7],
+      "narration": {
+        "es": {"intro": "Mira, hay nueve niños en el salón.", "action": "Cuatro niños salen del salón.", "question": "¿Cuántos niños quedan en el salón?"},
+        "en": {"intro": "Look, there are nine kids in the classroom.", "action": "Four kids leave the classroom.", "question": "How many kids are left in the classroom?"}
+      }
+    },
+    {
+      "level": 2,
+      "title": {"es": "Suma hasta 30", "en": "Addition up to 30"},
+      "operation": "+",
+      "emoji": "🚗",
+      "total": 15,
+      "add": 10,
+      "answer": 25,
+      "options": [20, 25, 28, 30],
+      "narration": {
+        "es": {"intro": "Hay quince carros en el estacionamiento.", "action": "Llegan diez carros más.", "question": "¿Cuántos carros hay ahora?"},
+        "en": {"intro": "There are fifteen cars in the parking lot.", "action": "Ten more cars arrive.", "question": "How many cars are there now?"}
+      }
+    },
+    {
+      "level": 2,
+      "title": {"es": "Resta hasta 30", "en": "Subtraction up to 30"},
+      "operation": "-",
+      "emoji": "🐶",
+      "total": 20,
+      "remove": 8,
+      "answer": 12,
+      "options": [10, 12, 14, 15],
+      "narration": {
+        "es": {"intro": "Hay veinte perritos jugando.", "action": "Ocho perritos se van a dormir.", "question": "¿Cuántos perritos siguen jugando?"},
+        "en": {"intro": "There are twenty puppies playing.", "action": "Eight puppies go to sleep.", "question": "How many puppies keep playing?"}
+      }
+    },
+    {
+      "level": 2,
+      "title": {"es": "Multiplicando Manzanas", "en": "Multiplying Apples"},
+      "operation": "×",
+      "emoji": "🍎",
+      "groups": 2,
+      "per_group": 3,
+      "answer": 6,
+      "options": [4, 5, 6, 8],
+      "narration": {
+        "es": {"intro": "Hay 2 canastas.", "action": "Cada canasta tiene 3 manzanas.", "question": "¿Cuántas manzanas hay en total?"},
+        "en": {"intro": "There are 2 baskets.", "action": "Each basket has 3 apples.", "question": "How many apples are there in total?"}
+      }
+    },
+    {
+      "level": 2,
+      "title": {"es": "Multiplicando Estrellas", "en": "Multiplying Stars"},
+      "operation": "×",
+      "emoji": "⭐",
+      "groups": 3,
+      "per_group": 2,
+      "answer": 6,
+      "options": [5, 6, 7, 9],
+      "narration": {
+        "es": {"intro": "Hay 3 cajas.", "action": "Cada caja tiene 2 estrellas.", "question": "¿Cuántas estrellas hay en total?"},
+        "en": {"intro": "There are 3 boxes.", "action": "Each box has 2 stars.", "question": "How many stars are there in total?"}
+      }
+    },
+    {
+      "level": 2,
+      "title": {"es": "Dividiendo Galletas", "en": "Dividing Cookies"},
+      "operation": "÷",
+      "emoji": "🍪",
+      "total": 6,
+      "divisor": 2,
+      "answer": 3,
+      "options": [2, 3, 4, 6],
+      "narration": {
+        "es": {"intro": "Hay 6 galletas.", "action": "Las repartimos en 2 platos.", "question": "¿Cuántas galletas hay en cada plato?"},
+        "en": {"intro": "There are 6 cookies.", "action": "We share them into 2 plates.", "question": "How many cookies are on each plate?"}
+      }
+    },
+    {
+      "level": 2,
+      "title": {"es": "Dividiendo Globos", "en": "Dividing Balloons"},
+      "operation": "÷",
+      "emoji": "🎈",
+      "total": 8,
+      "divisor": 4,
+      "answer": 2,
+      "options": [1, 2, 3, 4],
+      "narration": {
+        "es": {"intro": "Hay 8 globos.", "action": "Los repartimos en 4 grupos.", "question": "¿Cuántos globos hay en cada grupo?"},
+        "en": {"intro": "There are 8 balloons.", "action": "We share them into 4 groups.", "question": "How many balloons are in each group?"}
+      }
+    },
+    {
+      "level": 3,
+      "title": {"es": "Suma con dos cifras", "en": "Two-digit Addition"},
+      "operation": "+",
+      "emoji": "🎒",
+      "total": 10,
+      "add": 10,
+      "answer": 20,
+      "options": [15, 18, 20, 22],
+      "narration": {
+        "es": {"intro": "Tienes diez mochilas.", "action": "Te regalan diez mochilas más.", "question": "¿Cuántas mochilas tienes ahora?"},
+        "en": {"intro": "You have ten backpacks.", "action": "You are given ten more backpacks.", "question": "How many backpacks do you have now?"}
+      }
+    },
+    {
+      "level": 3,
+      "title": {"es": "Resta con dos cifras", "en": "Two-digit Subtraction"},
+      "operation": "-",
+      "emoji": "✏️",
+      "total": 15,
+      "remove": 5,
+      "answer": 10,
+      "options": [8, 9, 10, 11],
+      "narration": {
+        "es": {"intro": "Hay quince lápices en la caja.", "action": "Sacamos cinco lápices.", "question": "¿Cuántos lápices quedan en la caja?"},
+        "en": {"intro": "There are fifteen pencils in the box.", "action": "We take out five pencils.", "question": "How many pencils are left in the box?"}
+      }
+    },
+    {
+      "level": 3,
+      "title": {"es": "Multiplicando Libros", "en": "Multiplying Books"},
+      "operation": "×",
+      "emoji": "📚",
+      "groups": 3,
+      "per_group": 4,
+      "answer": 12,
+      "options": [10, 11, 12, 14],
+      "narration": {
+        "es": {"intro": "Hay 3 estantes.", "action": "Cada estante tiene 4 libros.", "question": "¿Cuántos libros hay en total?"},
+        "en": {"intro": "There are 3 shelves.", "action": "Each shelf has 4 books.", "question": "How many books are there in total?"}
+      }
+    },
+    {
+      "level": 3,
+      "title": {"es": "Multiplicando Trofeos", "en": "Multiplying Trophies"},
+      "operation": "×",
+      "emoji": "🏆",
+      "groups": 2,
+      "per_group": 5,
+      "answer": 10,
+      "options": [8, 9, 10, 12],
+      "narration": {
+        "es": {"intro": "Hay 2 repisas.", "action": "Cada repisa tiene 5 trofeos.", "question": "¿Cuántos trofeos hay en total?"},
+        "en": {"intro": "There are 2 shelves.", "action": "Each shelf has 5 trophies.", "question": "How many trophies are there in total?"}
+      }
+    },
+    {
+      "level": 3,
+      "title": {"es": "Dividiendo Dulces", "en": "Dividing Candies"},
+      "operation": "÷",
+      "emoji": "🍬",
+      "total": 12,
+      "divisor": 3,
+      "answer": 4,
+      "options": [3, 4, 5, 6],
+      "narration": {
+        "es": {"intro": "Hay 12 dulces.", "action": "Los repartimos en 3 bolsas.", "question": "¿Cuántos dulces hay en cada bolsa?"},
+        "en": {"intro": "There are 12 candies.", "action": "We share them into 3 bags.", "question": "How many candies are in each bag?"}
+      }
+    },
+    {
+      "level": 3,
+      "title": {"es": "Dividiendo Flores", "en": "Dividing Flowers"},
+      "operation": "÷",
+      "emoji": "🌸",
+      "total": 15,
+      "divisor": 5,
+      "answer": 3,
+      "options": [2, 3, 4, 5],
+      "narration": {
+        "es": {"intro": "Hay 15 flores.", "action": "Las repartimos en 5 jarrones.", "question": "¿Cuántas flores hay en cada jarrón?"},
+        "en": {"intro": "There are 15 flowers.", "action": "We share them into 5 vases.", "question": "How many flowers are in each vase?"}
+      }
+    }
+  ]
+}

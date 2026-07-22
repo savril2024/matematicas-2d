@@ -1,1 +1,1 @@
-web: python app_matematica.py
+web: python main.py
